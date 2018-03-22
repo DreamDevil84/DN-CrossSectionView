@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <title>VoxelTest</title>
+</head>
+
+<body>
+    <div>
+        <div id="loadingIndicator">Press button to load data</div>
+        <button id="getDataButton" onclick="getData()">Get Data</button>
+    </div>
+    <div id="layerControlBar" style="visibility: hidden">
+        <button onclick="nextLayer()">Next Layer</button>
+        <button id="animationButton" onclick="animationControll()">Start animation</button>
+        Speed: <input type="number" name="speed" id="animationSpeed" value="200">
+    </div>
+    <canvas id="voxelCanvas"></canvas>
+    <script src="js/index.js"></script>
+</body>
+
+</html>
