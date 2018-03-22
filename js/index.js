@@ -6,12 +6,14 @@ var animationSpeed = document.getElementById("animationSpeed").value;
 var animationButton = document.getElementById("animationButton");
 var getDataButton = document.getElementById("getDataButton");
 var layerControlBar = document.getElementById("layerControlBar");
+var imageSensitivity = document.getElementById("imageSensitivity").value / 10;
+
 
 
 canvas.setAttribute("width", 256);
 canvas.setAttribute("height", 256);
 
-var currentLayer = 290;
+var currentLayer = 0;
 var rawData = [];
 
 var request = new XMLHttpRequest();
@@ -22,7 +24,7 @@ function getData() {
     request.open("GET", "water.json");
     request.send();
     request.onreadystatechange = function () {
-        if(this.status === 404){
+        if (this.status === 404) {
             this.abort();
             alert('You must place "water.json" in the same folder as index.html');
             loadingIndicator.innerHTML = "Press button to load data";
@@ -43,6 +45,8 @@ function getHexColor(number) {
 }
 
 function drawCanvas(dataArray) {
+    let imageSens = document.getElementById("imageSensitivity").value / 10;;
+    console.log(imageSens);
     for (let y = 0; y < dataArray.length; y++) {
         for (let x = 0; x < dataArray[y].length; x++) {
 
@@ -55,9 +59,12 @@ function drawCanvas(dataArray) {
             //####################
             //  Monochrome
             //####################
-            let intensity = Math.floor(Math.abs(dataArray[y][x]) * 255)
-            ctx.fillStyle = "rgb(" + intensity + "," + intensity + "," + intensity + ")";
-
+            if (dataArray[y][x] < imageSens) {
+                ctx.fillStyle = "#000000";
+            } else {
+                let intensity = Math.floor(Math.abs(dataArray[y][x]) * 255);
+                ctx.fillStyle = "rgb(" + intensity + "," + intensity + "," + intensity + ")";
+            }
 
 
             ctx.fillRect(x, y, 1, 1);
@@ -80,9 +87,10 @@ function nextLayer() {
 var running = false;
 var myInterval = 0;
 function startAnimation() {
+    let speed = document.getElementById("animationSpeed").value;
     this.myInterval = setInterval(function () {
         nextLayer();
-    }, animationSpeed);
+    }, speed);
     animationButton.textContent = "Stop animation";
 }
 
@@ -101,7 +109,7 @@ function animationControll() {
 }
 
 //UI functions
-function showLayerControls(){
+function showLayerControls() {
     getDataButton.style.visibility = "hidden";
     layerControlBar.style.visibility = "visible";
 }

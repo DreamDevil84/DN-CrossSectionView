@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/style.css">
-    <title>VoxelTest</title>
+    <title>Cross-Section View</title>
 </head>
 
 <body>
@@ -18,7 +18,9 @@
         <button onclick="nextLayer()">Next Layer</button>
         <button id="animationButton" onclick="animationControll()">Start animation</button>
         Speed: <input type="number" name="speed" id="animationSpeed" value="200">
+        Sensitivity: <input type="number" name="imageSensitivity" id="imageSensitivity" value="0">
     </div>
+    <br>
     <canvas id="voxelCanvas"></canvas>
     <script src="js/index.js"></script>
 </body>
