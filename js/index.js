@@ -4,7 +4,7 @@ var ctx = canvas.getContext("2d");
 var loadingIndicator = document.getElementById("loadingIndicator");
 // var animationSpeed = document.getElementById("animationSpeed").value;
 var animationButton = document.getElementById("animationButton");
-var getDataButton = document.getElementById("getDataButton");
+var getDataBar = document.getElementById("getDataBar");
 var layerControlBar = document.getElementById("layerControlBar");
 var imageSensitivity = document.getElementById("imageSensitivity").value / 10;
 
@@ -174,7 +174,7 @@ function animationControll() {
 
 //UI functions
 function showLayerControls() {
-    getDataButton.style.visibility = "hidden";
+    getDataBar.style.visibility = "hidden";
     layerControlBar.style.visibility = "visible";
 }
 

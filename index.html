@@ -10,9 +10,10 @@
 </head>
 
 <body>
-    <div>
-        <div id="loadingIndicator">Press button to load data</div>
-        <button id="getDataButton" onclick="getData()">Get Data</button>
+    <div id="loadingIndicator">Press button to load data</div>
+    <div id="getDataBar">
+        <button onclick="getData('water.json')">Get Water Data</button>
+        <button  onclick="getData('fat.json')">Get Fat Data</button>
     </div>
     <div id="layerControlBar" style="visibility: hidden">
         <div>
