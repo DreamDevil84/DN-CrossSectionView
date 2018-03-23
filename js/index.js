@@ -2,7 +2,7 @@
 var canvas = document.getElementById("voxelCanvas");
 var ctx = canvas.getContext("2d");
 var loadingIndicator = document.getElementById("loadingIndicator");
-var animationSpeed = document.getElementById("animationSpeed").value;
+// var animationSpeed = document.getElementById("animationSpeed").value;
 var animationButton = document.getElementById("animationButton");
 var getDataButton = document.getElementById("getDataButton");
 var layerControlBar = document.getElementById("layerControlBar");
@@ -13,15 +13,18 @@ var imageSensitivity = document.getElementById("imageSensitivity").value / 10;
 canvas.setAttribute("width", 256);
 canvas.setAttribute("height", 256);
 
-var currentLayer = 0;
+var angle = "top";
+var currentLayer = 293;
 var rawData = [];
+
+var currentSource = "fat.json";
 
 var request = new XMLHttpRequest();
 
 function getData() {
     loadingIndicator.innerHTML = "Loading...";
 
-    request.open("GET", "water.json");
+    request.open("GET", currentSource);
     request.send();
     request.onreadystatechange = function () {
         if (this.status === 404) {
@@ -46,7 +49,6 @@ function getHexColor(number) {
 
 function drawCanvas(dataArray) {
     let imageSens = document.getElementById("imageSensitivity").value / 10;;
-    console.log(imageSens);
     for (let y = 0; y < dataArray.length; y++) {
         for (let x = 0; x < dataArray[y].length; x++) {
 
@@ -65,13 +67,23 @@ function drawCanvas(dataArray) {
                 let intensity = Math.floor(Math.abs(dataArray[y][x]) * 255);
                 ctx.fillStyle = "rgb(" + intensity + "," + intensity + "," + intensity + ")";
             }
-
-
             ctx.fillRect(x, y, 1, 1);
         }
     }
 }
-
+function layerStep() {
+    switch (angle) {
+        case "top":
+            nextLayer();
+            break;
+        case "front":
+            nextLayerFront()
+            break;
+        case "side":
+            nextLayerSide();
+            break;
+    }
+}
 function nextLayer() {
     if (currentLayer >= rawData.length - 1) {
         currentLayer = 0;
@@ -82,29 +94,81 @@ function nextLayer() {
     loadingIndicator.innerHTML = "Layer: " + currentLayer;
 }
 
+function nextLayerFront() {
+    if (currentLayer >= rawData[0].length - 1) {
+        currentLayer = 0;
+    } else {
+        currentLayer++;
+    }
+    let frontLayer = [];
+    for (let x = rawData.length - 1; x >= 0; x--) {
+        frontLayer.push(rawData[x][currentLayer]);
+    }
+    drawCanvas(frontLayer);
+    loadingIndicator.innerHTML = "Layer: " + currentLayer;
+}
+
+function nextLayerSide() {
+    if (currentLayer >= rawData[0][0].length - 1) {
+        currentLayer = 0;
+    } else {
+        currentLayer++;
+    }
+    let sideLayer = [];
+    for (let y = rawData.length - 1; y >= 0; y--) {
+        let tempArray = [];
+        for (let x = rawData[y].length - 1; x >= 0; x--) {
+            tempArray.push(rawData[y][x][currentLayer]);
+        }
+        sideLayer.push(tempArray);
+    }
+    drawCanvas(sideLayer);
+    loadingIndicator.innerHTML = "Layer: " + currentLayer;
+}
+
 
 //Animation Interval
 var running = false;
-var myInterval = 0;
-function startAnimation() {
-    let speed = document.getElementById("animationSpeed").value;
-    this.myInterval = setInterval(function () {
-        nextLayer();
-    }, speed);
-    animationButton.textContent = "Stop animation";
+// var myInterval = 0;
+// function startAnimation() {
+//     let speed = document.getElementById("animationSpeed").value;
+//     this.myInterval = setInterval(function () {
+//         nextLayer();
+//     }, speed);
+//     animationButton.textContent = "Stop animation";
+// }
+
+function startAnimationSpecial() {
+    switch (angle) {
+        case "top":
+            nextLayer();
+            break;
+        case "front":
+            nextLayerFront();
+            break;
+        case "side":
+            nextLayerSide();
+            break;
+    }
+    // console.log("Special animation started");
+    if (running === true) {
+        window.requestAnimationFrame(startAnimationSpecial);
+    }
 }
 
-function stopAnimation() {
-    clearInterval(this.myInterval);
-    animationButton.textContent = "Start animation";
-}
+// function stopAnimation() {
+//     clearInterval(this.myInterval);
+// }
 
 function animationControll() {
     running = !running;
     if (running === true) {
-        startAnimation();
-    } else {
-        stopAnimation()
+        // startAnimation();
+        startAnimationSpecial();
+        animationButton.textContent = "Stop animation";
+    } else if (running === false) {
+        // stopAnimation();
+        animationButton.textContent = "Start animation";
     }
 }
 
@@ -112,4 +176,40 @@ function animationControll() {
 function showLayerControls() {
     getDataButton.style.visibility = "hidden";
     layerControlBar.style.visibility = "visible";
+}
+
+function selectAnimationAngle(type) {
+    angle = type;
+    switch (type) {
+        case "top":
+            canvas.setAttribute("width", 256);
+            canvas.setAttribute("height", 256);
+            canvas.style.width = "512px";
+            canvas.style.height = "512px";
+            if (currentLayer > 0) {
+                currentLayer--;
+            };
+            nextLayer();
+            break;
+        case "front":
+            canvas.setAttribute("width", 256);
+            canvas.setAttribute("height", 294);
+            canvas.style.width = "512px";
+            canvas.style.height = "588px";
+            if (currentLayer > 0) {
+                currentLayer--;
+            };
+            nextLayerFront()
+            break;
+        case "side":
+            canvas.setAttribute("width", 256);
+            canvas.setAttribute("height", 294);
+            canvas.style.width = "512px";
+            canvas.style.height = "588px";
+            if (currentLayer > 0) {
+                currentLayer--;
+            };
+            nextLayerSide()
+            break;
+    }
 }

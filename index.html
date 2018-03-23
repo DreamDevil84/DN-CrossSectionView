@@ -15,10 +15,21 @@
         <button id="getDataButton" onclick="getData()">Get Data</button>
     </div>
     <div id="layerControlBar" style="visibility: hidden">
-        <button onclick="nextLayer()">Next Layer</button>
-        <button id="animationButton" onclick="animationControll()">Start animation</button>
-        Speed: <input type="number" name="speed" id="animationSpeed" value="200">
-        Sensitivity: <input type="number" name="imageSensitivity" id="imageSensitivity" value="0">
+        <div>
+            <button onclick="layerStep()">Next Layer</button>
+            <button id="animationButton" onclick="animationControll()">Start animation</button>
+            <!-- Speed: <input type="number" name="speed" id="animationSpeed" value="200"> -->
+            Sensitivity:
+            <input type="number" name="imageSensitivity" id="imageSensitivity" value="0">
+        </div>
+        <br>
+        <div>
+            <form>
+                <input type="radio" name="animDirection" onclick="selectAnimationAngle('top')" value="top" checked> Top
+                <input type="radio" name="animDirection" onclick="selectAnimationAngle('front')" value="front"> Front
+                <input type="radio" name="animDirection" onclick="selectAnimationAngle('side')" value="side"> Side
+            </form>
+        </div>
     </div>
     <br>
     <canvas id="voxelCanvas"></canvas>
